@@ -1,0 +1,42 @@
+{
+  "config": {
+    "bind": "127.0.0.1",
+    "max_body_bytes": 8192,
+    "max_batch_rows": 32,
+    "rate_limit_requests": 10,
+    "rate_limit_window_seconds": 60,
+    "auth": "bearer tokens with scopes"
+  },
+  "tests": {
+    "health_ok": 200,
+    "missing_token": 401,
+    "invalid_token": 401,
+    "viewer_forbidden": 403,
+    "valid_predict": 200,
+    "malformed_json": 400,
+    "wrong_content_type": 415,
+    "wrong_length": 422,
+    "out_of_range": 422,
+    "non_numeric": 422,
+    "non_finite": 422,
+    "batch_too_large": 422,
+    "oversized_body": 413,
+    "rate_limit": 429,
+    "admin_stats": 200,
+    "client_stats_forbidden": 403,
+    "unknown_path": 404,
+    "safe_error_body": 401
+  },
+  "summary": {
+    "total": 18,
+    "passed": 18,
+    "failed": 0
+  },
+  "gate": {
+    "exit": 0
+  },
+  "log_redaction": {
+    "tokens_in_logs": false
+  },
+  "note": "Recorded evidence from a loopback-only run. The model hash is environment-dependent and is not compared to a fixed value. Tolerances and field checks live in check_lab14.py."
+}

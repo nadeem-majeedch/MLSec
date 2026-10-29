@@ -1,0 +1,9 @@
+{
+  "clean": {"clean_accuracy": 0.8444, "attack_success_rate": 0.1771, "clean_source_target_rate": 0.1829},
+  "backdoored": {"clean_accuracy": 0.8306, "attack_success_rate": 0.8571, "clean_source_target_rate": 0.2057},
+  "defended": {"clean_accuracy": 0.8389, "attack_success_rate": 0.1543, "clean_source_target_rate": 0.1829},
+  "poison_count": 67,
+  "poison_rate": 0.0798,
+  "screening": {"flagged": 82, "poison_caught": 67, "threshold": 2.5},
+  "note": "Seed 11; trigger sets features 10-12 to 3.0; target class 1."
+}

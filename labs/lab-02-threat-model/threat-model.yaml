@@ -1,0 +1,227 @@
+# LAB-02 starter threat model.
+#
+# Complete this file from the MediScan brief in docs/labs/lab-02.md. Keep the
+# schema; replace every TODO. Run:
+#   python check_threat_model.py --model threat-model.yaml --report report.md
+#
+# The checker enforces structure, references, coverage, and severity arithmetic.
+# It cannot tell you whether the reasoning is good; use the rubric.
+
+system:
+  name: MediScan Triage Assistant
+  owner: Northbridge University Hospital Network (fictional)
+  description: >-
+    A radiology triage assistant that scores chest X-ray studies as routine,
+    urgent, or critical and places them on a radiologist worklist. Images arrive
+    from six hospital sites, are normalized by a preprocessing service, scored by
+    a vendor-supplied vision model, and reviewed by a radiologist. Radiologist
+    overrides feed a monthly retraining job.
+  deployment: >-
+    Cloud-hosted inference in one region, with on-premises acquisition at each
+    hospital. The vendor publishes model updates to a private registry. An
+    analytics team exports de-identified data to research partners.
+  out_of_scope: >-
+    The hospital EHR, billing systems, and radiologist credentialing are external
+    dependencies. Report-generation LLMs are not part of this release.
+
+assets:
+  - id: A1
+    name: Patient images and metadata
+    description: DICOM studies, accession numbers, age, sex, and acquisition site.
+    cia: [confidentiality, integrity]
+    sensitivity: high
+  - id: A2
+    name: Triage model weights and architecture
+    description: The vendor model artifact and the preprocessing parameters needed to reproduce a score.
+    cia: [confidentiality, integrity]
+    sensitivity: high
+  - id: A3
+    name: Training data and override labels
+    description: Historical studies plus radiologist overrides used for monthly retraining.
+    cia: [confidentiality, integrity]
+    sensitivity: high
+  - id: A4
+    name: Triage service availability
+    description: The inference API and worklist integration that clinicians depend on during a shift.
+    cia: [availability]
+    sensitivity: high
+  - id: A5
+    name: Audit logs and override records
+    description: Who changed a priority, when, and why; used for safety review and incident response.
+    cia: [integrity, availability]
+    sensitivity: medium
+  - id: A6
+    name: Model registry and deployment credentials
+    description: Signing keys, registry accounts, and CI/CD tokens that control what reaches production.
+    cia: [confidentiality, integrity]
+    sensitivity: high
+  - id: A7
+    name: Vendor update channel
+    description: The contracted path by which new model versions and preprocessing code arrive.
+    cia: [integrity]
+    sensitivity: high
+
+trust_boundaries:
+  - id: TB1
+    name: Hospital network to cloud ingestion
+    between: [hospital acquisition devices, cloud ingestion API]
+    controls: [mutual TLS, per-site upload credentials, DICOM validation]
+  - id: TB2
+    name: Ingestion and preprocessing to training
+    between: [cloud object store, training environment]
+    controls: [separate accounts, read-only dataset snapshots, no direct internet egress]
+  - id: TB3
+    name: Vendor to model registry
+    between: [vendor build system, private model registry]
+    controls: [artifact signing, staged promotion, human approval]
+  - id: TB4
+    name: Inference service to clinical worklist
+    between: [inference API, radiologist worklist clients]
+    controls: [OIDC authentication, per-user sessions, TLS]
+  - id: TB5
+    name: Analytics export to research partners
+    between: [analytics environment, external research storage]
+    controls: [de-identification job, data-use agreement, export review]
+  - id: TB6
+    name: Privileged support to production
+    between: [vendor and hospital administrators, production consoles]
+    controls: [just-in-time access, session recording, separation of duties]
+
+attack_surfaces:
+  - id: AS1
+    name: DICOM ingestion API
+    boundary: TB1
+    entry_point: HTTPS upload endpoint used by acquisition devices.
+    attacker_access: A compromised site account or a malicious insider at a hospital.
+  - id: AS2
+    name: Preprocessing container and dependencies
+    boundary: TB2
+    entry_point: Container image built from public and private packages.
+    attacker_access: A supply-chain attacker who publishes a package the build consumes.
+  - id: AS3
+    name: Training pipeline and label store
+    boundary: TB2
+    entry_point: Override import and retraining job configuration.
+    attacker_access: A credentialed informatics employee.
+  - id: AS4
+    name: Model registry and CI/CD
+    boundary: TB3
+    entry_point: Artifact promotion and deployment pipeline.
+    attacker_access: A compromised vendor account or a stolen deployment token.
+  - id: AS5
+    name: Inference REST API
+    boundary: TB4
+    entry_point: JSON scoring endpoint used by the worklist.
+    attacker_access: Any authenticated worklist client; query volume is not tightly limited.
+  - id: AS6
+    name: Clinician worklist and accounts
+    boundary: TB4
+    entry_point: Web login and priority-change action.
+    attacker_access: An external attacker with leaked credentials or a shared generic login.
+  - id: AS7
+    name: Analytics export job
+    boundary: TB5
+    entry_point: Scheduled export to partner storage.
+    attacker_access: An analyst with export permission.
+  - id: AS8
+    name: Vendor update package
+    boundary: TB3
+    entry_point: Signed model bundle delivered through the registry.
+    attacker_access: A compromised vendor build system.
+  - id: AS9
+    name: Support and administration console
+    boundary: TB6
+    entry_point: Vendor and hospital admin sessions.
+    attacker_access: An insider or a stolen privileged session.
+  - id: AS10
+    name: Telemetry and audit store
+    boundary: TB6
+    entry_point: Log ingestion and retention controls.
+    attacker_access: An administrator with write access to the log store.
+
+threats:
+  # Example 1 — replace the text, keep the field structure.
+  - id: T1
+    title: TODO describe the threat in one line
+    status: accepted
+    attack_class: evasion
+    nist_goal: integrity
+    lifecycle_stage: serving
+    atlas: [AML.T0015]
+    assets: [A1]
+    surfaces: [AS1]
+    actor: TODO who acts
+    knowledge: TODO what the attacker knows
+    capability: TODO what the attacker can do
+    assumptions:
+      - TODO one assumption
+    impact: 4
+    likelihood: 3
+    severity: high
+    impact_statement: TODO one sentence on the harm and who bears it.
+    mitigations:
+      preventive:
+        - TODO control one
+        - TODO control two
+      detective:
+        - TODO detection one
+      corrective:
+        - TODO response one
+    detection_hypothesis: TODO a metric, a baseline, and a threshold.
+    residual_risk: medium
+
+  # Example 2 — a rejected threat is required. Keep status rejected and add rationale.
+  - id: T2
+    title: TODO describe a threat you decide not to carry forward
+    status: rejected
+    attack_class: data_exfiltration
+    nist_goal: privacy
+    lifecycle_stage: artifact
+    atlas: []
+    assets: [A1]
+    surfaces: [AS6]
+    actor: TODO who acts
+    knowledge: TODO what the attacker knows
+    capability: TODO what the attacker can do
+    assumptions:
+      - TODO the control that makes this implausible
+    impact: 2
+    likelihood: 1
+    severity: low
+    impact_statement: TODO one sentence on the harm if it happened.
+    mitigations:
+      preventive:
+        - TODO control
+      detective:
+        - TODO detection
+      corrective:
+        - TODO response
+    detection_hypothesis: TODO how you would still notice it.
+    residual_risk: low
+    rationale: TODO explain why this is rejected and what would reopen it.
+
+  # TODO add at least seven more accepted threats. Cover all five lifecycle
+  # stages, all four NIST goals, at least six attack classes, and every asset
+  # and attack surface above. Add at least one threat per trust boundary.
+
+attack_trees:
+  # TODO add three trees. Each needs id, name, root, and at least three steps.
+  # Every step needs an action and a threat ID that exists above.
+  []
+
+crosswalk:
+  ai_rmf:
+    - function: GOVERN
+      note: TODO who owns labels, vendor signing, and export approval.
+    - function: MAP
+      note: TODO how assets and boundaries were mapped.
+    - function: MEASURE
+      note: TODO how detection hypotheses become metrics.
+    - function: MANAGE
+      note: TODO how residual risk and response are tracked.
+  owasp_ml:
+    # TODO map at least four OWASP ML Top 10 entries (ML01–ML10) to threat IDs.
+    []
+  owasp_llm:
+    applicable: false
+    rationale: TODO explain why the LLM list does or does not apply.

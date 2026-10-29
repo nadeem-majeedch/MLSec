@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="mlsec-favicon-title">
+  <title id="mlsec-favicon-title">ML-Sec</title>
+  <rect width="64" height="64" rx="12" fill="#3f51b5"/>
+  <path d="M32 9 50 16v15c0 12-8 20-18 24-10-4-18-12-18-24V16Z" fill="none" stroke="#ffffff" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M32 21v9m0 0-6 7m6-7 6 7" fill="none" stroke="#80cbc4" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="32" cy="20" r="3.5" fill="#ffffff"/>
+  <circle cx="26" cy="38" r="3.5" fill="#ffffff"/>
+  <circle cx="38" cy="38" r="3.5" fill="#ffffff"/>
+</svg>

@@ -1,0 +1,13 @@
+{
+  "member_accuracy": 1.0,
+  "nonmember_accuracy": 0.97,
+  "mean_member_confidence": 0.8784,
+  "mean_nonmember_confidence": 0.6918,
+  "auc": 0.8217,
+  "tpr_at_1pct": 0.074,
+  "tpr_at_5pct": 0.228,
+  "threshold_at_5pct": 0.9435,
+  "tpr_at_threshold": 0.228,
+  "fpr_at_threshold": 0.05,
+  "note": "Seed 31; 500 members and 500 nonmembers from sklearn digits; max softmax confidence. High AUC but low TPR at a 1% false-positive budget: confidence is not proof of membership."
+}

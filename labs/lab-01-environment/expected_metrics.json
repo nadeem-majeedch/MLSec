@@ -1,0 +1,37 @@
+{
+  "dataset": "sklearn.datasets.load_digits",
+  "n_samples": 1797,
+  "n_features": 64,
+  "split": {
+    "train": 1077,
+    "val": 360,
+    "test": 360,
+    "seed": 42
+  },
+  "model": "StandardScaler + LogisticRegression(max_iter=2000, random_state=42)",
+  "validation": {
+    "accuracy": 0.9722,
+    "macro_f1": 0.9724
+  },
+  "test": {
+    "accuracy": 0.9583,
+    "macro_f1": 0.9577,
+    "per_class_recall": [
+      0.9722,
+      0.8611,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      0.9722,
+      1.0,
+      0.8571,
+      0.9167
+    ]
+  },
+  "tolerance": {
+    "accuracy": 0.005,
+    "macro_f1": 0.005,
+    "note": "The checker also recomputes metrics from the saved model and requires an exact match to metrics.json."
+  }
+}

@@ -1,0 +1,324 @@
+site_name: Machine Learning Security (ML-Sec)
+site_description: A self-study, lab-driven course on adversarial machine learning, privacy, and secure ML engineering.
+site_url: https://nadeem-majeedch.github.io/MLSec/
+repo_url: https://github.com/nadeem-majeedch/MLSec
+docs_dir: docs
+edit_uri: ""
+
+theme:
+  name: material
+  custom_dir: overrides
+  language: en
+  logo: assets/logo.svg
+  favicon: assets/favicon.svg
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: teal
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.indexes
+    - navigation.path
+    - navigation.footer
+    - navigation.tracking
+    - navigation.top
+    - toc.follow
+    - content.code.copy
+    - search.suggest
+    - search.highlight
+    - search.share
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - footnotes
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+
+extra_css:
+  - stylesheets/site.css
+  - stylesheets/self-check.css
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+  - javascripts/self-check.js
+
+# Planning, maintainer, and answer documents are built but kept out of student navigation.
+not_in_nav: |
+  /course-blueprint.md
+  /module-map.md
+  /lab-catalog.md
+  /learning-outcomes.md
+  /implementation-roadmap.md
+  /maintainer-guide.md
+  /project-catalog.md
+  /lab-authoring-guide.md
+  /lab-template.md
+  /lab-validation-report.md
+  /projects/evaluator-guide.md
+  /modules/*/quiz-answers.md
+  /modules/*/exercise-solutions.md
+  /assessments/module-quizzes/qz-*.md
+  /assessments/level-checks/lc-*.md
+  /assessment-validation-report.md
+
+nav:
+- Home: index.md
+- Start here:
+  - Learning paths: learning-paths.md
+  - How to use this site: site-guide.md
+  - Student guide: student-guide.md
+  - About the instructor: about.md
+  - Troubleshooting: troubleshooting.md
+- Modules:
+  - Course roadmap: modules/index.md
+  - Level 1 — Foundations:
+    - M00 — How to Use This Course:
+      - Overview: modules/m00-orientation/index.md
+      - 00.1 — What ML security is: modules/m00-orientation/lesson-1-what-ml-security-is.md
+      - 00.2 — Your lab and your evidence: modules/m00-orientation/lesson-2-lab-and-evidence.md
+      - 00.3 — Rules of engagement: modules/m00-orientation/lesson-3-rules-of-engagement.md
+      - Knowledge check: modules/m00-orientation/quiz.md
+      - Exercises: modules/m00-orientation/exercises.md
+    - M01 — Python, NumPy, pandas, and scikit-learn:
+      - Overview: modules/m01-python-refresher/index.md
+      - 01.1 — Python for security work: modules/m01-python-refresher/lesson-1-python-for-security-work.md
+      - 01.2 — NumPy: modules/m01-python-refresher/lesson-2-numpy.md
+      - 01.3 — pandas: modules/m01-python-refresher/lesson-3-pandas.md
+      - 01.4 — scikit-learn: modules/m01-python-refresher/lesson-4-scikit-learn.md
+      - 01.5 — Reproducibility: modules/m01-python-refresher/lesson-5-reproducibility.md
+      - Knowledge check: modules/m01-python-refresher/quiz.md
+      - Exercises: modules/m01-python-refresher/exercises.md
+    - M02 — ML Fundamentals and Evaluation:
+      - Overview: modules/m02-ml-fundamentals/index.md
+      - 02.1 — Learning problems: modules/m02-ml-fundamentals/lesson-1-learning-problems.md
+      - 02.2 — Loss and gradients: modules/m02-ml-fundamentals/lesson-2-loss-and-gradients.md
+      - 02.3 — Evaluation: modules/m02-ml-fundamentals/lesson-3-evaluation.md
+      - 02.4 — Leakage and reporting: modules/m02-ml-fundamentals/lesson-4-leakage-and-reporting.md
+      - Knowledge check: modules/m02-ml-fundamentals/quiz.md
+      - Exercises: modules/m02-ml-fundamentals/exercises.md
+    - M03 — Cybersecurity and ML Threat Modeling:
+      - Overview: modules/m03-threat-modeling/index.md
+      - 03.1 — Security fundamentals: modules/m03-threat-modeling/lesson-1-security-fundamentals.md
+      - 03.2 — Adversaries and the NIST taxonomy: modules/m03-threat-modeling/lesson-2-adversaries-and-taxonomy.md
+      - 03.3 — Surfaces, lifecycle, and ATLAS: modules/m03-threat-modeling/lesson-3-surfaces-lifecycle-atlas.md
+      - 03.4 — Frameworks and crosswalks: modules/m03-threat-modeling/lesson-4-frameworks-and-crosswalks.md
+      - 03.5 — Building the model: modules/m03-threat-modeling/lesson-5-building-the-model.md
+      - Knowledge check: modules/m03-threat-modeling/quiz.md
+      - Exercises: modules/m03-threat-modeling/exercises.md
+  - Level 2 — Core attacks:
+    - M04 — Adversarial Examples and Evasion Attacks:
+      - Overview: modules/m04-evasion/index.md
+      - 04.1 — Evasion threat models and the geometry of perturbation: modules/m04-evasion/lesson-1-threat-models-and-geometry.md
+      - '04.2 — The gradient attack: FGSM': modules/m04-evasion/lesson-2-fgsm.md
+      - '04.3 — PGD: iteration, projection, and restarts': modules/m04-evasion/lesson-3-pgd.md
+      - 04.4 — Black-box, transfer, and the limits of evasion: modules/m04-evasion/lesson-4-black-box-and-transfer.md
+      - 04.5 — Measuring and reporting evasion honestly: modules/m04-evasion/lesson-5-measuring-honestly.md
+      - Knowledge check: modules/m04-evasion/quiz.md
+      - Exercises: modules/m04-evasion/exercises.md
+    - M05 — Training Data Poisoning and Label Manipulation:
+      - Overview: modules/m05-poisoning/index.md
+      - 05.1 — Poisoning threat models and the data supply chain: modules/m05-poisoning/lesson-1-poisoning-threat-models.md
+      - 05.2 — Label flipping and the poisoning curve: modules/m05-poisoning/lesson-2-label-flipping.md
+      - '05.3 — Targeted poisoning: flipping one decision': modules/m05-poisoning/lesson-3-targeted-poisoning.md
+      - 05.4 — Screening, robustness, and the limits of defense: modules/m05-poisoning/lesson-4-defenses-and-limits.md
+      - Knowledge check: modules/m05-poisoning/quiz.md
+      - Exercises: modules/m05-poisoning/exercises.md
+    - M06 — Backdoor Attacks, Trojan Models, and Trigger-Based Behavior:
+      - Overview: modules/m06-backdoors/index.md
+      - 06.1 — Backdoor anatomy and the supply chain: modules/m06-backdoors/lesson-1-backdoor-anatomy.md
+      - 06.2 — Building a tabular backdoor: modules/m06-backdoors/lesson-2-tabular-backdoor.md
+      - 06.3 — Trigger search in images: modules/m06-backdoors/lesson-3-trigger-search.md
+      - 06.4 — Detection, mitigation, and the arms race: modules/m06-backdoors/lesson-4-detection-and-mitigation.md
+      - Knowledge check: modules/m06-backdoors/quiz.md
+      - Exercises: modules/m06-backdoors/exercises.md
+    - M07 — Model Extraction, Membership Inference, and Model Inversion:
+      - Overview: modules/m07-extraction-privacy/index.md
+      - 07.1 — Prediction APIs as an attack surface: modules/m07-extraction-privacy/lesson-1-prediction-apis-as-attack-surface.md
+      - 07.2 — Model extraction: modules/m07-extraction-privacy/lesson-2-model-extraction.md
+      - 07.3 — Membership inference: modules/m07-extraction-privacy/lesson-3-membership-inference.md
+      - 07.4 — Model inversion and attribute inference: modules/m07-extraction-privacy/lesson-4-inversion-and-attribute-inference.md
+      - 07.5 — Privacy risk, governance, and reporting: modules/m07-extraction-privacy/lesson-5-privacy-risk-and-governance.md
+      - Knowledge check: modules/m07-extraction-privacy/quiz.md
+      - Exercises: modules/m07-extraction-privacy/exercises.md
+  - Level 3 — Practical defenses:
+    - M08 — Robustness Evaluation and Adversarial Defense:
+      - Overview: modules/m08-robustness-defense/index.md
+      - 08.1 — What robustness claims mean: modules/m08-robustness-defense/lesson-1-what-robustness-claims-mean.md
+      - 08.2 — Adversarial training: modules/m08-robustness-defense/lesson-2-adversarial-training.md
+      - 08.3 — Input preprocessing and detection: modules/m08-robustness-defense/lesson-3-input-preprocessing-and-detection.md
+      - 08.4 — Adaptive attacks and pitfalls: modules/m08-robustness-defense/lesson-4-adaptive-attacks-and-pitfalls.md
+      - 08.5 — Standardized evaluation: modules/m08-robustness-defense/lesson-5-standardized-evaluation.md
+      - 08.6 — Reporting robustness: modules/m08-robustness-defense/lesson-6-reporting-robustness.md
+      - Knowledge check: modules/m08-robustness-defense/quiz.md
+      - Exercises: modules/m08-robustness-defense/exercises.md
+    - M09 — Data Integrity, Dataset Governance, and Secure Training Pipelines:
+      - Overview: modules/m09-data-integrity/index.md
+      - 09.1 — Provenance and lineage: modules/m09-data-integrity/lesson-1-provenance-and-lineage.md
+      - 09.2 — Data quality and integrity: modules/m09-data-integrity/lesson-2-data-quality-and-integrity.md
+      - 09.3 — Splits, leakage, and evaluation integrity: modules/m09-data-integrity/lesson-3-splits-leakage-and-evaluation-integrity.md
+      - 09.4 — Reproducible training: modules/m09-data-integrity/lesson-4-reproducible-training.md
+      - 09.5 — Dataset governance and audit: modules/m09-data-integrity/lesson-5-dataset-governance-and-audit.md
+      - Knowledge check: modules/m09-data-integrity/quiz.md
+      - Exercises: modules/m09-data-integrity/exercises.md
+    - M10 — Model Serialization, Dependencies, and ML Supply-Chain Security:
+      - Overview: modules/m10-supply-chain/index.md
+      - 10.1 — Supply chain and artifact trust: modules/m10-supply-chain/lesson-1-ml-supply-chain-and-artifact-trust.md
+      - 10.2 — Unsafe serialization and safe formats: modules/m10-supply-chain/lesson-2-unsafe-serialization-and-safe-formats.md
+      - 10.3 — Dependency and artifact scanning: modules/m10-supply-chain/lesson-3-dependency-and-artifact-scanning.md
+      - 10.4 — Provenance, signing, and promotion: modules/m10-supply-chain/lesson-4-provenance-signing-and-promotion.md
+      - Knowledge check: modules/m10-supply-chain/quiz.md
+      - Exercises: modules/m10-supply-chain/exercises.md
+    - M11 — Secure Model Serving, API Security, Monitoring, and Incident Response:
+      - Overview: modules/m11-serving-monitoring/index.md
+      - 11.1 — Serving architecture and attack surface: modules/m11-serving-monitoring/lesson-1-serving-architecture-and-attack-surface.md
+      - 11.2 — Authentication and authorization: modules/m11-serving-monitoring/lesson-2-authentication-and-authorization.md
+      - 11.3 — Request bounds, validation, and safe output: modules/m11-serving-monitoring/lesson-3-request-bounds-validation-and-safe-output.md
+      - 11.4 — Monitoring, drift, and attack indicators: modules/m11-serving-monitoring/lesson-4-monitoring-drift-and-attack-indicators.md
+      - 11.5 — Incident response, rollback, and evidence: modules/m11-serving-monitoring/lesson-5-incident-response-rollback-and-evidence.md
+      - 11.6 — Secure configuration, secrets, and least privilege: modules/m11-serving-monitoring/lesson-6-secure-configuration-secrets-and-least-privilege.md
+      - Knowledge check: modules/m11-serving-monitoring/quiz.md
+      - Exercises: modules/m11-serving-monitoring/exercises.md
+  - Level 4 — Advanced and emerging security:
+    - M12 — Federated Learning Security and Distributed ML Threats:
+      - Overview: modules/m12-federated-learning/index.md
+      - 12.1 — Federated architecture and trust assumptions: modules/m12-federated-learning/lesson-1-architecture-and-trust.md
+      - 12.2 — Malicious clients and update poisoning: modules/m12-federated-learning/lesson-2-malicious-clients-and-update-poisoning.md
+      - 12.3 — Aggregation and its limits: modules/m12-federated-learning/lesson-3-aggregation-and-its-limits.md
+      - 12.4 — Client validation, monitoring, and privacy: modules/m12-federated-learning/lesson-4-validation-monitoring-and-privacy.md
+      - 12.5 — Evaluating distributed defenses: modules/m12-federated-learning/lesson-5-evaluating-distributed-defenses.md
+      - Knowledge check: modules/m12-federated-learning/quiz.md
+      - Exercises: modules/m12-federated-learning/exercises.md
+    - M13 — Privacy-Preserving Machine Learning:
+      - Overview: modules/m13-privacy-preserving-ml/index.md
+      - 13.1 — Privacy threat models: modules/m13-privacy-preserving-ml/lesson-1-privacy-threat-models.md
+      - 13.2 — Differential privacy from first principles: modules/m13-privacy-preserving-ml/lesson-2-differential-privacy-first-principles.md
+      - 13.3 — Composition, budgets, and noisy releases: modules/m13-privacy-preserving-ml/lesson-3-composition-budgets-and-noisy-releases.md
+      - 13.4 — Private training and secure computation: modules/m13-privacy-preserving-ml/lesson-4-private-training-and-secure-computation.md
+      - 13.5 — Privacy–utility evaluation: modules/m13-privacy-preserving-ml/lesson-5-privacy-utility-evaluation.md
+      - Knowledge check: modules/m13-privacy-preserving-ml/quiz.md
+      - Exercises: modules/m13-privacy-preserving-ml/exercises.md
+    - M14 — Explainability, Fairness, and Security Trade-offs:
+      - Overview: modules/m14-explainability-fairness/index.md
+      - 14.1 — Explanation methods and assumptions: modules/m14-explainability-fairness/lesson-1-explanation-methods-and-assumptions.md
+      - 14.2 — Explanation leakage and manipulation: modules/m14-explainability-fairness/lesson-2-explanation-leakage-and-manipulation.md
+      - 14.3 — Fairness metrics and subgroups: modules/m14-explainability-fairness/lesson-3-fairness-metrics-and-subgroups.md
+      - 14.4 — Security trade-offs and audit reporting: modules/m14-explainability-fairness/lesson-4-security-trade-offs-and-audit-reporting.md
+      - Knowledge check: modules/m14-explainability-fairness/quiz.md
+      - Exercises: modules/m14-explainability-fairness/exercises.md
+    - M15 — Generative AI, LLM, RAG, and AI Agent Security:
+      - Overview: modules/m15-genai-llm-agents/index.md
+      - 15.1 — From predictive ML to LLM application security: modules/m15-genai-llm-agents/lesson-1-from-predictive-ml-to-llm-security.md
+      - 15.2 — Prompt injection and instruction hierarchy: modules/m15-genai-llm-agents/lesson-2-prompt-injection-and-instruction-hierarchy.md
+      - 15.3 — Retrieval, provenance, and RAG boundaries: modules/m15-genai-llm-agents/lesson-3-retrieval-provenance-and-rag-boundaries.md
+      - 15.4 — Sensitive-data exposure and insecure output: modules/m15-genai-llm-agents/lesson-4-sensitive-data-and-insecure-output.md
+      - 15.5 — Agent authority, tools, and delegated trust: modules/m15-genai-llm-agents/lesson-5-agent-authority-tools-and-delegated-trust.md
+      - 15.6 — Layered defense, taxonomies, and evaluation: modules/m15-genai-llm-agents/lesson-6-layered-defense-taxonomies-and-evaluation.md
+      - Knowledge check: modules/m15-genai-llm-agents/quiz.md
+      - Exercises: modules/m15-genai-llm-agents/exercises.md
+  - Level 5 — Applied projects:
+    - M16 — End-to-End ML Security Assessment:
+      - Overview: modules/m16-end-to-end-assessment/index.md
+      - 16.1 — Scoping and system documentation: modules/m16-end-to-end-assessment/lesson-1-scoping-and-system-documentation.md
+      - 16.2 — Threat model to test plan: modules/m16-end-to-end-assessment/lesson-2-threat-model-to-test-plan.md
+      - 16.3 — Measurement, baselines, and evidence: modules/m16-end-to-end-assessment/lesson-3-measurement-baselines-and-evidence.md
+      - 16.4 — Findings, severity, and remediation: modules/m16-end-to-end-assessment/lesson-4-findings-severity-and-remediation.md
+      - Knowledge check: modules/m16-end-to-end-assessment/quiz.md
+      - Exercises: modules/m16-end-to-end-assessment/exercises.md
+    - M17 — Red-Team and Blue-Team Simulation:
+      - Overview: modules/m17-red-team-blue-team/index.md
+      - 17.1 — Rules of engagement and threat model: modules/m17-red-team-blue-team/lesson-1-rules-of-engagement-and-threat-model.md
+      - 17.2 — Red-team planning and execution: modules/m17-red-team-blue-team/lesson-2-red-team-planning-and-execution.md
+      - 17.3 — Blue-team detection and response: modules/m17-red-team-blue-team/lesson-3-blue-team-detection-and-response.md
+      - 17.4 — Purple-team synthesis and adaptation: modules/m17-red-team-blue-team/lesson-4-purple-team-synthesis-and-adaptation.md
+      - Knowledge check: modules/m17-red-team-blue-team/quiz.md
+      - Exercises: modules/m17-red-team-blue-team/exercises.md
+    - M18 — Capstone Projects and Research Extensions:
+      - Overview: modules/m18-capstone-and-research/index.md
+      - 18.1 — Choosing and scoping a capstone: modules/m18-capstone-and-research/lesson-1-choosing-and-scoping-a-capstone.md
+      - 18.2 — Milestones, reproducibility, and management: modules/m18-capstone-and-research/lesson-2-milestones-reproducibility-and-project-management.md
+      - 18.3 — Results, visualization, and limitations: modules/m18-capstone-and-research/lesson-3-results-visualization-and-limitations.md
+      - 18.4 — From project to research question: modules/m18-capstone-and-research/lesson-4-from-project-to-research-question.md
+      - Knowledge check: modules/m18-capstone-and-research/quiz.md
+      - Exercises: modules/m18-capstone-and-research/exercises.md
+- Labs:
+  - Overview: labs/index.md
+  - LAB-01 — Reproducible baseline: labs/lab-01.md
+  - LAB-01B — Evaluation audit: labs/lab-01b.md
+  - LAB-02 — Threat model: labs/lab-02.md
+  - LAB-03 — Evasion versus perturbation budget: labs/lab-03.md
+  - LAB-04 — Targeted evasion and transfer: labs/lab-04.md
+  - LAB-05 — Label-flip poisoning curve: labs/lab-05.md
+  - LAB-06 — Targeted poisoning and screening: labs/lab-06.md
+  - LAB-07 — Tabular backdoor: labs/lab-07.md
+  - LAB-08 — Image backdoor and trigger search: labs/lab-08.md
+  - LAB-09 — Model extraction: labs/lab-09.md
+  - LAB-10 — Membership inference: labs/lab-10.md
+  - LAB-11 — Defense evaluation: labs/lab-11.md
+  - LAB-12 — Dataset validation and leakage: labs/lab-12.md
+  - LAB-13 — Supply-chain audit: labs/lab-13.md
+  - LAB-14 — Secure prediction API: labs/lab-14.md
+  - LAB-15 — Monitoring and incident response: labs/lab-15.md
+  - LAB-16 — Federated learning attack and defense: labs/lab-16.md
+  - LAB-17 — Privacy budget and utility: labs/lab-17.md
+  - LAB-18 — Explanation stability and subgroup audit: labs/lab-18.md
+  - LAB-19 — RAG trust boundary: labs/lab-19.md
+  - LAB-20 — Agent containment and approval: labs/lab-20.md
+- Projects:
+  - Overview: projects/index.md
+  - 'PRJ-01 — Meridian Pay: fraud scoring': projects/prj-01-fraud-detection.md
+  - 'PRJ-02 — Aster Manufacturing: poisoning': projects/prj-02-image-poisoning.md
+  - 'PRJ-03 — Helio Health: API privacy': projects/prj-03-prediction-api-privacy.md
+  - 'PRJ-04 — Cobalt Models: secure pipeline': projects/prj-04-secure-pipeline.md
+  - 'PRJ-05 — Harbor: RAG and agent': projects/prj-05-rag-agent.md
+  - 'PRJ-06 — Sentinel Vision: robustness': projects/prj-06-robustness-comparison.md
+  - RT-01 — Red/blue exercise: projects/rt-01-red-blue.md
+  - Capstone: projects/capstone.md
+- Assessments:
+  - Overview: assessments/index.md
+  - Practice sampler: assessments/practice.md
+  - Prerequisite diagnostic: assessments/diagnostic/index.md
+  - Module quizzes: assessments/module-quizzes/index.md
+  - Level checks: assessments/level-checks/index.md
+  - Final assessment: assessments/final-assessment/index.md
+  - Question bank: assessments/question-bank/index.md
+  - Rubrics:
+    - Overview: assessments/rubrics/index.md
+    - Lab rubric: assessments/rubrics/lab-rubric.md
+    - Completion checklists: assessments/rubrics/lab-completion-checklists.md
+    - Project and RT-01: assessments/rubrics/project-rubric.md
+    - Capstone: assessments/rubrics/capstone-rubric.md
+  - Progress checklist: assessments/progress-checklist.md
+  - Progress record: assessments/progress-and-reflection.md
+- Reference:
+  - References: references.md
+  - Glossary: glossary.md
+  - Framework mapping: framework-mapping.md
+  - Research reading guide: research-reading-guide.md
+  - Dataset catalog: dataset-catalog.md

@@ -1,0 +1,64 @@
+{
+  "dataset": {
+    "name": "synthetic churn (mlsec_labs.make_churn_dataset)",
+    "rows": 2040,
+    "customers": 1700,
+    "churn_rate": 0.2230,
+    "sha256": "516511fa58c131820c6b9d350b45ee7ddcc0eb1807dddb83712fc83203b76e02",
+    "seed": 42
+  },
+  "audit": {
+    "duplicate_rows": 39,
+    "missing_monthly_spend": 80,
+    "late_fee_univariate_auc": 0.8989,
+    "late_fee_agreement": 0.9074,
+    "random_split_customer_overlap": 122
+  },
+  "leaky_baseline": {
+    "roc_auc": 0.9459,
+    "pr_auc": 0.8634,
+    "accuracy_at_0_5": 0.9275,
+    "recall_at_0_5": 0.8596,
+    "protocol": "random row split 75/25; imputer and scaler fitted on all rows; includes late_fee_flag"
+  },
+  "repaired": {
+    "split": {
+      "train_rows": 1200,
+      "val_rows": 392,
+      "test_rows": 409,
+      "train_customers": 1020,
+      "val_customers": 340,
+      "test_customers": 340
+    },
+    "threshold": 0.3427,
+    "threshold_rule": "80th percentile of validation scores",
+    "test": {
+      "accuracy": 0.7628,
+      "precision": 0.4333,
+      "recall": 0.4588,
+      "f1": 0.4457,
+      "roc_auc": 0.7076,
+      "pr_auc": 0.3983,
+      "tp": 39,
+      "fp": 51,
+      "fn": 46,
+      "tn": 273,
+      "flagged": 90,
+      "n": 409
+    },
+    "bootstrap_95": {
+      "recall": [0.3556, 0.5625],
+      "precision": [0.3333, 0.5397]
+    },
+    "group_cv_pr_auc": {
+      "folds": [0.3832, 0.3681, 0.4694, 0.4426, 0.4242],
+      "mean": 0.4175,
+      "std": 0.0374
+    }
+  },
+  "tolerance": {
+    "metrics": 0.005,
+    "audit_counts": "exact",
+    "note": "Small metric differences are acceptable across library versions; the checker recomputes metrics from the saved model and split exactly and also enforces coarse performance bands."
+  }
+}

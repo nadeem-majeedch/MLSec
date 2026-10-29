@@ -1,0 +1,33 @@
+{
+  "system": "MediScan Triage Assistant",
+  "assets": 7,
+  "boundaries": 6,
+  "surfaces": 10,
+  "accepted_threats": 11,
+  "rejected_threats": 1,
+  "severity": {
+    "critical": 1,
+    "high": 8,
+    "medium": 2,
+    "low": 0
+  },
+  "nist_goals": {
+    "abuse": 1,
+    "availability": 1,
+    "integrity": 6,
+    "privacy": 3
+  },
+  "attack_classes": 9,
+  "lifecycle_stages": 5,
+  "attack_trees": 3,
+  "owasp_ml_entries": 6,
+  "atlas_ids": [
+    "AML.T0015",
+    "AML.T0018",
+    "AML.T0020",
+    "AML.T0024",
+    "AML.T0040",
+    "AML.T0043"
+  ],
+  "note": "Reference values from solution.yaml. The checker enforces minimum counts and full coverage, not these exact totals; a sound model may be larger."
+}

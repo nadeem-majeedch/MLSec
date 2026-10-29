@@ -1,0 +1,116 @@
+{% extends "main.html" %}
+
+{% block htmltitle %}
+  <title>Page not found (404) - {{ config.site_name }}</title>
+{% endblock %}
+
+{% block announce %}
+  <a href="#main-content" class="md-skip">Skip to content</a>
+{% endblock %}
+
+{% block content %}
+  <h1 id="main-content" tabindex="-1">Page not found</h1>
+
+  <p><span class="mlsec-kind">404</span></p>
+
+  <p>
+    This address does not match a page in ML-Sec. The course may have moved, the
+    link may have a typo, or the URL may be missing the site's project path.
+  </p>
+
+  <h2 id="find-what-you-need">Find what you need</h2>
+
+  <div class="grid cards">
+    <ul>
+      <li>
+        <p><strong>Start from the beginning</strong></p>
+        <hr>
+        <p>The landing page has the course overview, outcomes, and entry points.</p>
+        <p><a href="{{ base_url }}">Go to the home page</a></p>
+      </li>
+      <li>
+        <p><strong>Browse the roadmap</strong></p>
+        <hr>
+        <p>Every module with its prerequisites, effort, labs, and outcomes.</p>
+        <p><a href="{{ base_url }}modules/">Open the course roadmap</a></p>
+      </li>
+      <li>
+        <p><strong>Find a lab</strong></p>
+        <hr>
+        <p>All 21 labs with tier, hours, difficulty, and prerequisites.</p>
+        <p><a href="{{ base_url }}labs/">Open the labs index</a></p>
+      </li>
+      <li>
+        <p><strong>Look up a term</strong></p>
+        <hr>
+        <p>Plain-language definitions, acronym expansions, and lesson links.</p>
+        <p><a href="{{ base_url }}glossary/">Open the glossary</a></p>
+      </li>
+    </ul>
+  </div>
+
+  <h2 id="try-the-search-box">Try the search box</h2>
+
+  <p>
+    The search control is in the top-right corner of the header. Search a
+    distinctive term or a course identifier such as <code>LAB-03</code>,
+    <code>PRJ-01</code>, or <code>QZ-07B</code>. Results update as you type and
+    open in the same tab.
+  </p>
+
+  <h2 id="check-the-address">Check the address</h2>
+
+  <p>
+    This site is published from a GitHub project path, so every page address
+    begins with <code>/MLSec/</code>. If you typed or edited the address manually:
+  </p>
+
+  <ul>
+    <li>keep the <code>/MLSec/</code> segment;</li>
+    <li>match the capitalization of the file name;</li>
+    <li>remove a trailing extra path segment if the page is a section index.</li>
+  </ul>
+
+  <p>
+    For example, the lab index is <code>/MLSec/labs/</code> and the first lab is
+    <code>/MLSec/labs/lab-01/</code>.
+  </p>
+
+  <h2 id="report-a-broken-link">Report a broken link</h2>
+
+  <p>
+    If you arrived here by following a link inside the course, that is a defect.
+    Open an issue in the
+    <a href="https://github.com/nadeem-majeedch/MLSec/issues">course repository</a>
+    with:
+  </p>
+
+  <ul>
+    <li>the address of the page that contains the broken link;</li>
+    <li>the link text or the address it points to;</li>
+    <li>what you expected to find.</li>
+  </ul>
+
+  <p>
+    Please do not include credentials or personal data in the report. For a
+    security problem in the course materials, use coordinated disclosure rather
+    than a public issue with an exploit.
+  </p>
+
+  <h2 id="related-pages">Related pages</h2>
+
+  <ul>
+    <li>
+      <a href="{{ base_url }}site-guide/">How to use this site</a> — navigation,
+      page types, and accessibility.
+    </li>
+    <li>
+      <a href="{{ base_url }}troubleshooting/">Troubleshooting</a> — rendering,
+      search, keyboard, and lab-environment problems.
+    </li>
+    <li>
+      <a href="{{ base_url }}student-guide/">Student guide</a> — setup, study
+      loop, schedules, and assessment.
+    </li>
+  </ul>
+{% endblock %}

@@ -1,0 +1,42 @@
+{
+  "seed": 37,
+  "window_size": 100,
+  "epsilon": 0.1,
+  "calibration_windows": 12,
+  "thresholds": {
+    "input_shift": 0.1529,
+    "low_confidence": 0.8232,
+    "shadow_disagreement": 0.0823,
+    "client_concentration": 0.6,
+    "throughput": 5.0
+  },
+  "baseline_false_positive_windows": 0,
+  "baseline_windows": 6,
+  "scenarios": {
+    "baseline": {"alerting_windows": 0, "mean_confidence": 0.8956, "accuracy": 0.9733},
+    "benign_drift": {"alerting_windows": 6, "mean_confidence": 0.8622, "accuracy": 0.96, "signals": ["input_shift"]},
+    "evasion_attack": {"alerting_windows": 6, "mean_confidence": 0.684, "accuracy": 0.63, "signals": ["input_shift", "low_confidence", "shadow_disagreement"]},
+    "query_burst": {"alerting_windows": 6, "mean_confidence": 0.8921, "accuracy": 0.96, "signals": ["client_concentration", "throughput"]},
+    "recovery": {"alerting_windows": 0, "mean_confidence": 0.8926, "accuracy": 0.9667}
+  },
+  "episodes": [
+    {"id": "EP-01", "windows": "18-23", "classification": "distribution drift under review", "severity": "low"},
+    {"id": "EP-02", "windows": "24-29", "classification": "probable evasion or model-targeted abuse", "severity": "high"},
+    {"id": "EP-03", "windows": "30-35", "classification": "client abuse or scraping", "severity": "medium"}
+  ],
+  "confirmed_incidents": 1,
+  "rollback": {
+    "base_size": 288,
+    "attack_success_current": 0.3507,
+    "attack_success_previous": 0.3299,
+    "restored": false
+  },
+  "mitigation": {
+    "attack_success_before": 0.3507,
+    "attack_success_after": 0.1979,
+    "clean_accuracy_before": 0.96,
+    "clean_accuracy_after": 0.9433
+  },
+  "recovery": {"alerting_windows": 0, "within_band": true},
+  "note": "Seed 37. Six synthetic scenarios over sklearn digits. Drift fires input shift only and stays low severity; evasion fires three content signals and becomes the single confirmed incident; the query burst is volume-only abuse; rollback between two equally vulnerable checkpoints is rejected rather than claimed as a fix."
+}

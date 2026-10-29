@@ -1,0 +1,34 @@
+# Built site (never commit)
+site/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Lab outputs and records
+artifacts/
+run.json
+manifest.json
+
+# Model and data artifacts
+*.joblib
+*.pkl
+*.onnx
+*.pt
+*.h5
+checkpoints/
+datasets/**
+!datasets/README.md
+!datasets/**/README.md
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Environment and secrets
+.env
+.env.*

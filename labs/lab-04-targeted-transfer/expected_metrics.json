@@ -1,0 +1,16 @@
+{
+  "clean_source_accuracy": 0.9667,
+  "clean_target_accuracy": 0.9704,
+  "targeted": {
+    "0.10": {"source_success": 0.109, "transfer_success": 0.0556},
+    "0.20": {"source_success": 0.562, "transfer_success": 0.2564},
+    "0.30": {"source_success": 0.9808, "transfer_success": 0.6175}
+  },
+  "transfer": {
+    "0.05": {"source_asr": 0.113, "target_asr": 0.1034},
+    "0.10": {"source_asr": 0.3352, "target_asr": 0.3487},
+    "0.20": {"source_asr": 0.8908, "target_asr": 0.7893},
+    "0.30": {"source_asr": 1.0, "target_asr": 0.9904}
+  },
+  "note": "Seed 42; source logistic regression, target random forest (max_depth=12)."
+}

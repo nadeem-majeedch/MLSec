@@ -1,0 +1,10 @@
+{
+  "teacher_accuracy": 0.9947,
+  "curve": {
+    "50": {"random_fidelity": 0.762, "random_accuracy": 0.76, "active_fidelity": 0.4793, "active_accuracy": 0.4767},
+    "100": {"random_fidelity": 0.7013, "random_accuracy": 0.7, "active_fidelity": 0.9227, "active_accuracy": 0.9227},
+    "200": {"random_fidelity": 0.694, "random_accuracy": 0.692, "active_fidelity": 0.928, "active_accuracy": 0.924},
+    "500": {"random_fidelity": 0.8707, "random_accuracy": 0.8693, "active_fidelity": 0.9753, "active_accuracy": 0.9713}
+  },
+  "note": "Seed 21; 10-D five-class synthetic teacher; active extraction has a cold start and loses to random at 50 queries."
+}

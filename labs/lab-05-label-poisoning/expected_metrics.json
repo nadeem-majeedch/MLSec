@@ -1,0 +1,11 @@
+{
+  "clean_accuracy": 0.9667,
+  "curve": {
+    "0.00": {"poisoned_rows": 0, "accuracy": 0.9667, "macro_f1": 0.9666},
+    "0.05": {"poisoned_rows": 63, "accuracy": 0.9648, "macro_f1": 0.9648},
+    "0.10": {"poisoned_rows": 126, "accuracy": 0.9389, "macro_f1": 0.9383},
+    "0.20": {"poisoned_rows": 251, "accuracy": 0.887, "macro_f1": 0.8876},
+    "0.30": {"poisoned_rows": 377, "accuracy": 0.7981, "macro_f1": 0.7968}
+  },
+  "note": "Seed 42; each rate uses a fresh generator, so the selected rows are not nested."
+}

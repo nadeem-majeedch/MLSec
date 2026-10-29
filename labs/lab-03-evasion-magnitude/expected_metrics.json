@@ -1,0 +1,18 @@
+{
+  "clean_accuracy": 0.9667,
+  "fgsm": {
+    "0.00": 0.0,
+    "0.02": 0.0383,
+    "0.05": 0.113,
+    "0.10": 0.3352,
+    "0.20": 0.8908
+  },
+  "pgd": {
+    "0.00": 0.0,
+    "0.02": 0.0383,
+    "0.05": 0.1188,
+    "0.10": 0.3602,
+    "0.20": 0.9655
+  },
+  "note": "Reference values for seed 42 on the deterministic digits split; tolerances in check_lab03.py."
+}

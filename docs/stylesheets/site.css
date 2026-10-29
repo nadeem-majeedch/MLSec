@@ -1,0 +1,342 @@
+/* ML-Sec site layer: presentation only. Course content and lab metrics are unchanged. */
+
+:root {
+  --mlsec-radius: 0.5rem;
+  --mlsec-border: var(--md-default-fg-color--lightest, #d7d7d7);
+}
+
+/* Readable measure and rhythm */
+.md-typeset {
+  line-height: 1.62;
+}
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3 {
+  letter-spacing: -0.01em;
+}
+
+.md-typeset h1 {
+  font-weight: 650;
+  margin-bottom: 0.8rem;
+}
+
+.md-typeset h2 {
+  margin-top: 2.2rem;
+}
+
+.md-typeset p,
+.md-typeset li {
+  max-width: 78ch;
+}
+
+.md-typeset table:not([class]) {
+  font-size: 0.78rem;
+}
+
+.md-typeset table:not([class]) th,
+.md-typeset table:not([class]) td {
+  vertical-align: top;
+}
+
+.md-typeset__table {
+  -webkit-overflow-scrolling: touch;
+}
+
+.md-typeset pre > code {
+  max-height: 32rem;
+}
+
+/* Links are distinguishable without relying on color alone */
+.md-typeset a:not(.md-button):not(.headerlink):not(.md-content__button) {
+  text-decoration: underline;
+  text-decoration-thickness: 0.06em;
+  text-underline-offset: 0.14em;
+}
+
+.md-typeset a:not(.md-button):hover {
+  text-decoration-thickness: 0.12em;
+}
+
+/* Visible keyboard focus everywhere */
+:focus-visible {
+  outline: 3px solid var(--md-accent-fg-color, #009688);
+  outline-offset: 2px;
+}
+
+.md-nav__link:focus-visible,
+.md-tabs__link:focus-visible {
+  outline-offset: -2px;
+}
+
+.md-typeset h2,
+.md-typeset h3,
+.md-typeset h4 {
+  scroll-margin-top: 5rem;
+}
+
+/* Keyboard hint */
+.md-typeset kbd {
+  padding: 0.1rem 0.35rem;
+  border: 1px solid var(--mlsec-border);
+  border-bottom-width: 2px;
+  border-radius: 0.25rem;
+  background: var(--md-code-bg-color);
+  font-size: 0.78em;
+}
+
+/* Landing hero */
+.mlsec-hero {
+  margin: 0 0 2rem;
+  padding: 2.6rem 2rem 2.4rem;
+  border-radius: 0.7rem;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(128, 203, 196, 0.32), transparent 42%),
+    linear-gradient(135deg, #1a237e 0%, #283593 48%, #00695c 100%);
+  color: #ffffff;
+}
+
+.mlsec-hero > * {
+  max-width: 62ch;
+}
+
+.mlsec-hero h1 {
+  margin: 0 0 0.6rem;
+  color: #ffffff;
+  font-size: clamp(1.9rem, 3.6vw, 2.55rem);
+  line-height: 1.14;
+}
+
+.mlsec-hero p {
+  margin: 0.55rem 0;
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.mlsec-hero .mlsec-kicker {
+  margin: 0 0 0.8rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #b2dfdb;
+}
+
+.mlsec-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.35rem;
+  max-width: none;
+}
+
+.mlsec-hero .md-button {
+  margin: 0;
+}
+
+.mlsec-hero .md-button--primary {
+  border-color: #ffffff;
+  background: #ffffff;
+  color: #1a237e;
+}
+
+.mlsec-hero .md-button--primary:hover,
+.mlsec-hero .md-button--primary:focus {
+  border-color: #e8eaf6;
+  background: #e8eaf6;
+  color: #1a237e;
+}
+
+.mlsec-hero .md-button:not(.md-button--primary) {
+  border-color: rgba(255, 255, 255, 0.72);
+  color: #ffffff;
+}
+
+.mlsec-hero .md-button:not(.md-button--primary):hover,
+.mlsec-hero .md-button:not(.md-button--primary):focus {
+  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+/* At-a-glance figures */
+.mlsec-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  gap: 0.7rem;
+  margin: 1.4rem 0 2rem;
+}
+
+.mlsec-stat {
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--mlsec-border);
+  border-radius: var(--mlsec-radius);
+}
+
+.mlsec-stat strong {
+  display: block;
+  color: var(--md-primary-fg-color);
+  font-size: 1.45rem;
+  line-height: 1.15;
+}
+
+[data-md-color-scheme="slate"] .mlsec-stat strong {
+  color: #9fa8da;
+}
+
+.mlsec-stat span {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--md-default-fg-color--light);
+  font-size: 0.74rem;
+  line-height: 1.35;
+}
+
+/* Page-kind label used on orientation and reference pages */
+.mlsec-kind {
+  display: inline-block;
+  margin: 0 0 0.75rem;
+  padding: 0.18rem 0.55rem;
+  border: 1px solid var(--md-primary-fg-color);
+  border-radius: 999px;
+  color: var(--md-primary-fg-color);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+[data-md-color-scheme="slate"] .mlsec-kind {
+  border-color: #9fa8da;
+  color: #9fa8da;
+}
+
+/* Cards */
+.md-typeset .grid.cards > ul > li {
+  border-radius: var(--mlsec-radius);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.md-typeset .grid.cards > ul > li:hover {
+  border-color: var(--md-accent-fg-color);
+  box-shadow: 0 0.2rem 0.6rem rgba(0, 0, 0, 0.08);
+}
+
+.md-typeset .grid.cards > ul > li p:last-child {
+  margin-bottom: 0;
+}
+
+/* Hints and solutions are visually distinct from lesson prose */
+.md-typeset h2#hints + ol,
+.md-typeset h2#hints + p + ol {
+  padding: 0.7rem 1rem 0.7rem 2rem;
+  border-left: 0.22rem solid var(--md-accent-fg-color, #009688);
+  border-radius: var(--mlsec-radius);
+  background: var(--md-code-bg-color);
+}
+
+.md-typeset details {
+  margin: 1rem 0;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid var(--mlsec-border);
+  border-left: 0.22rem solid var(--md-accent-fg-color, #009688);
+  border-radius: var(--mlsec-radius);
+}
+
+.md-typeset details summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.md-typeset details[open] {
+  padding-bottom: 0.65rem;
+}
+
+.md-typeset summary:focus-visible {
+  outline-offset: 3px;
+}
+
+.md-typeset .admonition {
+  border-radius: var(--mlsec-radius);
+}
+
+/* Tables of contents and breadcrumbs stay legible at small sizes */
+.md-path {
+  font-size: 0.7rem;
+}
+
+.md-nav__title {
+  font-weight: 700;
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+@media screen and (max-width: 44.984375em) {
+  .mlsec-hero {
+    padding: 1.7rem 1.1rem 1.6rem;
+    border-radius: 0.5rem;
+  }
+
+  .mlsec-hero__actions .md-button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .mlsec-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Printable checklists */
+@media print {
+  .md-header,
+  .md-tabs,
+  .md-sidebar,
+  .md-footer,
+  .md-search,
+  .md-top,
+  .md-content__button,
+  .md-path {
+    display: none !important;
+  }
+
+  .md-main__inner,
+  .md-content {
+    margin: 0;
+    max-width: none;
+  }
+
+  .md-typeset {
+    font-size: 10.5pt;
+  }
+
+  .md-typeset a {
+    color: #000000;
+    text-decoration: underline;
+  }
+
+  .md-typeset table {
+    page-break-inside: avoid;
+  }
+
+  .mlsec-hero {
+    border: 1px solid #999999;
+    background: none;
+    color: #000000;
+  }
+
+  .mlsec-hero h1,
+  .mlsec-hero p,
+  .mlsec-hero .mlsec-kicker {
+    color: #000000;
+  }
+}

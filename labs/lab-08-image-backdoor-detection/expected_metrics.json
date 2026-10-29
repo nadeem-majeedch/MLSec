@@ -1,0 +1,13 @@
+{
+  "clean": {"accuracy": 0.9907, "asr": 0.0},
+  "backdoored": {"accuracy": 0.9722, "asr": 0.9818},
+  "defended": {"accuracy": 0.9907, "asr": 0.0, "flagged": 20, "poison_caught": 20},
+  "poison_count": 20,
+  "poison_rate": 0.0803,
+  "scan": {
+    "best": {"row": 6, "col": 6, "target_score": 0.8884},
+    "clean_model_true_patch_score": 0.0443,
+    "detected": true
+  },
+  "note": "Seed 13; binary digits 3 vs 8; white 2x2 patch at rows/cols 6-7."
+}

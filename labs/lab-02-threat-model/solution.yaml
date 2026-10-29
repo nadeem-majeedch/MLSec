@@ -1,0 +1,661 @@
+system:
+  name: MediScan Triage Assistant
+  owner: Northbridge University Hospital Network (fictional)
+  description: >-
+    A radiology triage assistant that scores chest X-ray studies as routine,
+    urgent, or critical and places them on a radiologist worklist. Images arrive
+    from six hospital sites, are normalized by a preprocessing service, scored by
+    a vendor-supplied vision model, and reviewed by a radiologist. Radiologist
+    overrides feed a monthly retraining job.
+  deployment: >-
+    Cloud-hosted inference in one region, with on-premises acquisition at each
+    hospital. The vendor publishes model updates to a private registry. An
+    analytics team exports de-identified data to research partners.
+  out_of_scope: >-
+    The hospital EHR, billing systems, and the radiologist credentialing process
+    are external dependencies. Report-generation LLMs are not part of this
+    release.
+
+assets:
+  - id: A1
+    name: Patient images and metadata
+    description: DICOM studies, accession numbers, age, sex, and acquisition site.
+    cia: [confidentiality, integrity]
+    sensitivity: high
+  - id: A2
+    name: Triage model weights and architecture
+    description: The vendor model artifact and the preprocessing parameters needed to reproduce a score.
+    cia: [confidentiality, integrity]
+    sensitivity: high
+  - id: A3
+    name: Training data and override labels
+    description: Historical studies plus radiologist overrides used for monthly retraining.
+    cia: [confidentiality, integrity]
+    sensitivity: high
+  - id: A4
+    name: Triage service availability
+    description: The inference API and worklist integration that clinicians depend on during a shift.
+    cia: [availability]
+    sensitivity: high
+  - id: A5
+    name: Audit logs and override records
+    description: Who changed a priority, when, and why; used for safety review and incident response.
+    cia: [integrity, availability]
+    sensitivity: medium
+  - id: A6
+    name: Model registry and deployment credentials
+    description: Signing keys, registry accounts, and CI/CD tokens that control what reaches production.
+    cia: [confidentiality, integrity]
+    sensitivity: high
+  - id: A7
+    name: Vendor update channel
+    description: The contracted path by which new model versions and preprocessing code arrive.
+    cia: [integrity]
+    sensitivity: high
+
+trust_boundaries:
+  - id: TB1
+    name: Hospital network to cloud ingestion
+    between: [hospital acquisition devices, cloud ingestion API]
+    controls: [mutual TLS, per-site upload credentials, DICOM validation]
+  - id: TB2
+    name: Ingestion and preprocessing to training
+    between: [cloud object store, training environment]
+    controls: [separate accounts, read-only dataset snapshots, no direct internet egress]
+  - id: TB3
+    name: Vendor to model registry
+    between: [vendor build system, private model registry]
+    controls: [artifact signing, staged promotion, human approval]
+  - id: TB4
+    name: Inference service to clinical worklist
+    between: [inference API, radiologist worklist clients]
+    controls: [OIDC authentication, per-user sessions, TLS]
+  - id: TB5
+    name: Analytics export to research partners
+    between: [analytics environment, external research storage]
+    controls: [de-identification job, data-use agreement, export review]
+  - id: TB6
+    name: Privileged support to production
+    between: [vendor and hospital administrators, production consoles]
+    controls: [just-in-time access, session recording, separation of duties]
+
+attack_surfaces:
+  - id: AS1
+    name: DICOM ingestion API
+    boundary: TB1
+    entry_point: HTTPS upload endpoint used by acquisition devices.
+    attacker_access: A compromised site account or a malicious insider at a hospital.
+  - id: AS2
+    name: Preprocessing container and dependencies
+    boundary: TB2
+    entry_point: Container image built from public and private packages.
+    attacker_access: A supply-chain attacker who publishes a package the build consumes.
+  - id: AS3
+    name: Training pipeline and label store
+    boundary: TB2
+    entry_point: Override import and retraining job configuration.
+    attacker_access: A credentialed informatics employee.
+  - id: AS4
+    name: Model registry and CI/CD
+    boundary: TB3
+    entry_point: Artifact promotion and deployment pipeline.
+    attacker_access: A compromised vendor account or a stolen deployment token.
+  - id: AS5
+    name: Inference REST API
+    boundary: TB4
+    entry_point: JSON scoring endpoint used by the worklist.
+    attacker_access: Any authenticated worklist client; query volume is not tightly limited.
+  - id: AS6
+    name: Clinician worklist and accounts
+    boundary: TB4
+    entry_point: Web login and priority-change action.
+    attacker_access: An external attacker with leaked credentials or a shared generic login.
+  - id: AS7
+    name: Analytics export job
+    boundary: TB5
+    entry_point: Scheduled export to partner storage.
+    attacker_access: An analyst with export permission.
+  - id: AS8
+    name: Vendor update package
+    boundary: TB3
+    entry_point: Signed model bundle delivered through the registry.
+    attacker_access: A compromised vendor build system.
+  - id: AS9
+    name: Support and administration console
+    boundary: TB6
+    entry_point: Vendor and hospital admin sessions.
+    attacker_access: An insider or a stolen privileged session.
+  - id: AS10
+    name: Telemetry and audit store
+    boundary: TB6
+    entry_point: Log ingestion and retention controls.
+    attacker_access: An administrator with write access to the log store.
+
+threats:
+  - id: T1
+    title: Adversarial image downgrades an urgent finding
+    status: accepted
+    attack_class: evasion
+    nist_goal: integrity
+    lifecycle_stage: serving
+    atlas: [AML.T0015, AML.T0043]
+    assets: [A1, A4]
+    surfaces: [AS1, AS5]
+    actor: An external attacker with a hospital upload account or control of an acquisition device.
+    knowledge: Black-box access to the triage score; no weights.
+    capability: Submit images repeatedly and observe the returned priority.
+    assumptions:
+      - Preprocessing is deterministic and does not purify inputs.
+      - No radiologist reviews a study before the triage score is shown.
+      - The attacker targets one finding rather than every study.
+    impact: 5
+    likelihood: 4
+    severity: critical
+    impact_statement: >-
+      A missed pneumothorax or nodule delays care, causes patient harm, and
+      triggers regulatory review and loss of clinician trust.
+    mitigations:
+      preventive:
+        - Randomized smoothing or input purification for critical-priority decisions.
+        - Ensemble disagreement escalates a study to human review.
+        - Mandatory radiologist review of every critical-priority study.
+      detective:
+        - Per-device urgent-score rate compared with a 30-day baseline.
+        - Canary studies with known findings submitted every shift.
+      corrective:
+        - Roll back the model version and quarantine the source device.
+        - Re-read affected studies manually and notify the safety office.
+    detection_hypothesis: >-
+      A device whose urgent-score rate drops by more than 30 percent relative to
+      its 30-day baseline while image volume is stable indicates evasion or a
+      broken acquisition pipeline.
+    residual_risk: medium
+
+  - id: T2
+    title: Insider flips override labels before retraining
+    status: accepted
+    attack_class: poisoning
+    nist_goal: integrity
+    lifecycle_stage: training
+    atlas: [AML.T0020]
+    assets: [A3]
+    surfaces: [AS3]
+    actor: A credentialed radiology informatics employee.
+    knowledge: White-box knowledge of the label schema and retraining schedule.
+    capability: Edit or delete override records without a second approver.
+    assumptions:
+      - Overrides are imported into training without provenance checks.
+      - The attacker changes a small fraction of labels.
+      - Monthly retraining uses all available overrides.
+    impact: 5
+    likelihood: 3
+    severity: high
+    impact_statement: >-
+      A systematically weakened model suppresses a finding across future
+      patients, and the damage persists until someone audits the labels.
+    mitigations:
+      preventive:
+        - Dual approval for override changes above a small threshold.
+        - Signed label provenance and a separate serving-time label store.
+        - A canary holdout with expert-confirmed labels excluded from training.
+      detective:
+        - Weekly report of label drift by reviewer and by finding.
+        - Reconciliation of override counts against the worklist.
+      corrective:
+        - Revert to the last trusted snapshot and retrain.
+        - Review every patient scored by the affected model version.
+    detection_hypothesis: >-
+      More than 5 percent of one reviewer's overrides contradict both the model
+      and the second reader within a week, or a reviewer's volume doubles without
+      a schedule change.
+    residual_risk: medium
+
+  - id: T3
+    title: Compromised vendor update inserts a backdoor
+    status: accepted
+    attack_class: backdoor
+    nist_goal: integrity
+    lifecycle_stage: artifact
+    atlas: [AML.T0018]
+    assets: [A2, A6, A7]
+    surfaces: [AS4, AS8]
+    actor: A compromised vendor build system or a stolen signing account.
+    knowledge: Knowledge of the registry API and the promotion process.
+    capability: Publish a model artifact that the registry accepts.
+    assumptions:
+      - The registry trusts a single vendor signature.
+      - Staging uses the same code with a small evaluation set.
+      - No independent trigger scan runs before promotion.
+    impact: 5
+    likelihood: 3
+    severity: high
+    impact_statement: >-
+      A trojaned model can suppress or fabricate a finding on demand while
+      passing clean validation, turning a supply-chain compromise into patient harm.
+    mitigations:
+      preventive:
+        - Require two independent signatures for production promotion.
+        - Reproducible builds with SBOM and hash pinning.
+        - Shadow-mode rollout to a fixed canary site before fleet release.
+      detective:
+        - Behavioral diff against the prior artifact on a canary set.
+        - Synthetic trigger scan on every candidate artifact.
+      corrective:
+        - Revoke the artifact, rotate signing keys, and roll back.
+        - Re-score studies processed by the suspect version.
+    detection_hypothesis: >-
+      A candidate artifact changes predictions on the canary trigger set by more
+      than 10 percent while clean validation accuracy stays within one point.
+    residual_risk: medium
+
+  - id: T4
+    title: Competitor extracts the model through the scoring API
+    status: accepted
+    attack_class: extraction
+    nist_goal: abuse
+    lifecycle_stage: serving
+    atlas: [AML.T0040, AML.T0024]
+    assets: [A2, A6]
+    surfaces: [AS5]
+    actor: A competitor or model broker with an authenticated worklist account.
+    knowledge: Black-box; knows the input format and the returned probability vector.
+    capability: Automates a high volume of queries over diverse studies.
+    assumptions:
+      - The API returns full probabilities rather than a coarse label.
+      - Per-account quotas are generous or absent.
+      - No watermark is embedded in the model behavior.
+    impact: 4
+    likelihood: 3
+    severity: high
+    impact_statement: >-
+      A functional clone erodes the vendor's investment and may be deployed
+      without the safety controls that accompany the original.
+    taxonomy_note: >-
+      NIST AI 100-2e2025 groups model extraction under abuse of functionality;
+      many organizations also track it as intellectual-property loss.
+    mitigations:
+      preventive:
+        - Return a coarse priority label or top-2 probabilities, not the full vector.
+        - Per-account and per-IP quotas with anomaly review.
+        - Embed a behavioral watermark in the model.
+      detective:
+        - Query-pattern detection for uniform class coverage and near-duplicate inputs.
+        - Extraction canary queries with known expected outputs.
+      corrective:
+        - Suspend the account and preserve query logs.
+        - Rotate the watermark key if a clone is found.
+    detection_hypothesis: >-
+      One account requests more than 10,000 distinct studies in 24 hours with
+      near-uniform coverage of findings, or repeatedly queries near-duplicates.
+    residual_risk: medium
+
+  - id: T5
+    title: Membership inference exposes that a patient was in training
+    status: accepted
+    attack_class: membership_inference
+    nist_goal: privacy
+    lifecycle_stage: serving
+    atlas: []
+    assets: [A1, A3]
+    surfaces: [AS5, AS7]
+    actor: A researcher or external partner with model outputs and auxiliary data.
+    knowledge: Black-box access plus some demographic information about a target.
+    capability: Query the model and compare confidence on candidate records.
+    assumptions:
+      - The model overfits rare findings.
+      - Outputs are not rounded or clipped.
+      - An analyst can link records to individuals.
+    impact: 4
+    likelihood: 3
+    severity: high
+    impact_statement: >-
+      Confirming that a person's study was used for training reveals a sensitive
+      diagnosis and creates legal and ethical exposure.
+    mitigations:
+      preventive:
+        - Train with differential privacy for the retraining job.
+        - Round and clip confidence scores returned by the API.
+        - Suppress reports below a minimum group size.
+      detective:
+        - Quarterly membership-inference audit with shadow models.
+        - Review of exports that join model outputs to identifiers.
+      corrective:
+        - Retrain with a stronger privacy budget and restrict exports.
+        - Notify the privacy office and follow breach procedures.
+    detection_hypothesis: >-
+      A shadow-model membership audit reaches ROC-AUC above 0.6 on held-out
+      patients, or a partner export joins scores to identified records.
+    residual_risk: medium
+
+  - id: T6
+    title: Ransomware or flooding takes triage offline
+    status: accepted
+    attack_class: denial_of_service
+    nist_goal: availability
+    lifecycle_stage: serving
+    atlas: []
+    assets: [A4]
+    surfaces: [AS5, AS6]
+    actor: A criminal group or a disgruntled insider.
+    knowledge: External knowledge of the public worklist login.
+    capability: Encrypt storage, flood the API, or disable a region.
+    assumptions:
+      - There is no offline triage workflow.
+      - The service runs in a single region.
+      - Backups are reachable from the production network.
+    impact: 5
+    likelihood: 2
+    severity: high
+    impact_statement: >-
+      Urgent studies wait in a queue during an outage, delaying care and forcing
+      clinicians into an untested manual process.
+    mitigations:
+      preventive:
+        - Rate limiting, autoscaling, and a second region.
+        - Immutable offline backups and network segmentation.
+        - A rehearsed paper-based downtime workflow.
+      detective:
+        - Latency and error-budget alerts on the scoring endpoint.
+        - Ransomware canary files in storage.
+      corrective:
+        - Fail over, restore from immutable backups, and activate downtime protocol.
+        - Preserve forensic evidence and notify incident response.
+    detection_hypothesis: >-
+      Inference p95 latency above 2 seconds or an error rate above 5 percent for
+      5 minutes pages the on-call engineer; canary files changing triggers the
+      ransomware playbook.
+    residual_risk: medium
+
+  - id: T7
+    title: Malicious dependency exfiltrates images from preprocessing
+    status: accepted
+    attack_class: data_exfiltration
+    nist_goal: privacy
+    lifecycle_stage: artifact
+    atlas: []
+    assets: [A1]
+    surfaces: [AS2]
+    actor: A supply-chain attacker who publishes a typosquatted package.
+    knowledge: Public dependency graph and build logs.
+    capability: Execute code inside the preprocessing container.
+    assumptions:
+      - The container has outbound internet access.
+      - Dependencies are installed without hash pinning.
+      - No egress allowlist exists.
+    impact: 5
+    likelihood: 2
+    severity: high
+    impact_statement: >-
+      Protected health information leaves the network in bulk, creating a
+      reportable breach and irreparable privacy loss.
+    mitigations:
+      preventive:
+        - Hash-pinned dependencies from a private index.
+        - Egress deny-by-default with an explicit allowlist.
+        - Minimal base image and dependency review.
+      detective:
+        - Container egress alerts and image scanning.
+        - SBOM diff on every build.
+      corrective:
+        - Rebuild the image, rotate credentials, and start breach assessment.
+        - Block the package and notify the registry.
+    detection_hypothesis: >-
+      The preprocessing container attempts any outbound connection to a host
+      outside the approved allowlist, or the SBOM adds an unexpected package.
+    residual_risk: low
+
+  - id: T8
+    title: Analyst exports more data than the agreement allows
+    status: accepted
+    attack_class: data_exfiltration
+    nist_goal: privacy
+    lifecycle_stage: monitoring
+    atlas: []
+    assets: [A1]
+    surfaces: [AS7]
+    actor: An insider analyst or a compromised analytics account.
+    knowledge: Export schema and partner storage location.
+    capability: Authorized export access without row-level limits.
+    assumptions:
+      - De-identification removes names but keeps dates and rare diagnoses.
+      - Partners can re-identify with auxiliary data.
+      - Exports are not reviewed before release.
+    impact: 4
+    likelihood: 3
+    severity: high
+    impact_statement: >-
+      Re-identification of patients in a research dataset causes privacy harm
+      and violates the data-use agreement.
+    mitigations:
+      preventive:
+        - k-anonymity minimums, date generalization, and row limits.
+        - Purpose-bound access with data-loss prevention on exports.
+        - Independent export review before release.
+      detective:
+        - Export volume and field anomaly alerts.
+        - Re-identification risk review for each release.
+      corrective:
+        - Revoke access, recall the data, and notify the privacy office.
+        - Reassess the de-identification method.
+    detection_hypothesis: >-
+      An export exceeds 5,000 rows, includes free-text fields, or the same user
+      exports on three consecutive days without a new approved request.
+    residual_risk: medium
+
+  - id: T9
+    title: Credential stuffing changes a study priority
+    status: accepted
+    attack_class: credential_abuse
+    nist_goal: integrity
+    lifecycle_stage: serving
+    atlas: []
+    assets: [A4, A5]
+    surfaces: [AS6, AS9]
+    actor: An external criminal with leaked clinician credentials.
+    knowledge: Knows the worklist URL and common password patterns.
+    capability: Password spraying and session hijacking.
+    assumptions:
+      - Worklist accounts lack multi-factor authentication.
+      - Some sites share a generic login.
+      - Priority changes are not re-authenticated.
+    impact: 4
+    likelihood: 3
+    severity: high
+    impact_statement: >-
+      An attacker can hide a study or promote a low-priority one, disrupting care
+      and corrupting the audit record used for safety review.
+    mitigations:
+      preventive:
+        - Multi-factor authentication and per-user accounts.
+        - Device posture checks and session timeout.
+        - Re-authentication for priority changes.
+      detective:
+        - Impossible-travel and failed-login alerts.
+        - Review of priority changes from new devices.
+      corrective:
+        - Force password reset, revoke sessions, and review changes.
+        - Notify the affected site and restore the correct queue order.
+    detection_hypothesis: >-
+      More than 20 failed logins for one account in 10 minutes, a login from two
+      countries within an hour, or a priority change from a new device.
+    residual_risk: medium
+
+  - id: T10
+    title: Administrator alters audit records to hide overrides
+    status: accepted
+    attack_class: log_tampering
+    nist_goal: integrity
+    lifecycle_stage: monitoring
+    atlas: []
+    assets: [A5]
+    surfaces: [AS9, AS10]
+    actor: An insider with log-store administrator access.
+    knowledge: Knows the logging pipeline and retention policy.
+    capability: Delete or rewrite override records.
+    assumptions:
+      - Logs are writable by administrators.
+      - No write-once storage or hash chain exists.
+      - Safety review samples records rather than reconciling counts.
+    impact: 3
+    likelihood: 2
+    severity: medium
+    impact_statement: >-
+      Safety reviews and incident investigations reach the wrong conclusion, and
+      a pattern of harmful overrides stays invisible.
+    mitigations:
+      preventive:
+        - Append-only or write-once storage for audit records.
+        - Separation of duties between clinical review and log administration.
+        - Signed log segments.
+      detective:
+        - Hash-chain verification and daily count reconciliation.
+        - Alert on retention-policy changes.
+      corrective:
+        - Restore from the immutable copy and begin a forensic review.
+        - Reconstruct the override history from the worklist.
+    detection_hypothesis: >-
+      A gap in the hash chain, a retention-policy change, or a daily override
+      count that differs from the worklist count by more than 1 percent.
+    residual_risk: low
+
+  - id: T11
+    title: Decommissioned workstation leaks cached images
+    status: rejected
+    attack_class: data_exfiltration
+    nist_goal: privacy
+    lifecycle_stage: artifact
+    atlas: []
+    assets: [A1]
+    surfaces: [AS6]
+    actor: A thief with physical access to disposed hardware.
+    knowledge: None beyond physical access.
+    capability: Remove and read a disk after disposal.
+    assumptions:
+      - Full-disk encryption is enforced and keys are escrowed.
+      - Worklist clients do not cache images locally.
+      - Disposal requires a destruction certificate.
+    impact: 4
+    likelihood: 1
+    severity: low
+    impact_statement: >-
+      Cached studies could expose diagnoses if a disk left the building intact.
+    mitigations:
+      preventive:
+        - Full-disk encryption, no local image cache, and certified media destruction.
+      detective:
+        - Quarterly disposal audit against asset inventory.
+      corrective:
+        - Breach assessment and patient notification if a disk is recovered.
+    detection_hypothesis: >-
+      An asset disposal record lacks a destruction certificate within 30 days, or
+      a disposed device appears on the network.
+    residual_risk: low
+    rationale: >-
+      Rejected as a live threat because encryption, no local cache, and logged
+      destruction make the path implausible under the stated assumptions. Reopen
+      it if any of those controls is removed or a cache is introduced.
+
+  - id: T12
+    title: Compromised site account injects poisoned studies
+    status: accepted
+    attack_class: poisoning
+    nist_goal: integrity
+    lifecycle_stage: data_collection
+    atlas: [AML.T0020]
+    assets: [A1, A3]
+    surfaces: [AS1]
+    actor: An attacker who controls one hospital's upload account.
+    knowledge: Knows the upload format and that new studies enter retraining.
+    capability: Submit a batch of studies with manipulated labels or borderline images.
+    assumptions:
+      - Upload credentials are shared at the site.
+      - Ingestion does not cap per-source volume.
+      - New studies enter the next retraining batch without review.
+    impact: 4
+    likelihood: 2
+    severity: medium
+    impact_statement: >-
+      A poisoned batch shifts the model for a finding, and the effect persists
+      across retraining cycles until the data is audited.
+    mitigations:
+      preventive:
+        - Per-device credentials and signed upload envelopes.
+        - Duplicate and near-duplicate detection at ingestion.
+        - Per-source volume caps and label provenance.
+      detective:
+        - Source-level contribution report for each training batch.
+        - Near-duplicate clustering review before retraining.
+      corrective:
+        - Quarantine the batch and retrain from a trusted snapshot.
+        - Audit studies from the affected source.
+    detection_hypothesis: >-
+      A single source contributes more than 10 percent of a training batch or more
+      than 100 near-duplicate images in a day.
+    residual_risk: low
+
+attack_trees:
+  - id: AT1
+    name: Cause a critical finding to be triaged as routine
+    root: Attacker needs an urgent finding to be scored routine and reach a radiologist late.
+    steps:
+      - action: Obtain an upload account or control of an acquisition device.
+        threat: T1
+      - action: Craft a perturbation that survives normalization.
+        threat: T1
+      - action: Observe the returned priority and iterate.
+        threat: T1
+      - action: Avoid review by keeping the score below the critical threshold.
+        threat: T9
+  - id: AT2
+    name: Suppress one finding across the fleet
+    root: Attacker wants future models to miss a specific finding.
+    steps:
+      - action: Inject mislabeled studies at ingestion.
+        threat: T12
+      - action: Flip override labels before retraining.
+        threat: T2
+      - action: Deliver a trojaned update through the vendor channel.
+        threat: T3
+      - action: Confirm the effect on a canary study.
+        threat: T1
+  - id: AT3
+    name: Exfiltrate patient images in bulk
+    root: Attacker wants identifiable studies outside the network.
+    steps:
+      - action: Compromise a preprocessing dependency.
+        threat: T7
+      - action: Use an authorized analytics export.
+        threat: T8
+      - action: Hide the activity by altering audit records.
+        threat: T10
+      - action: Link exported records to individuals.
+        threat: T5
+
+crosswalk:
+  ai_rmf:
+    - function: GOVERN
+      note: Assign label-provenance ownership, vendor-signing duties, and export approval to named roles.
+    - function: MAP
+      note: Record assets, trust boundaries, and clinical impact before selecting controls.
+    - function: MEASURE
+      note: Turn each detection hypothesis into a metric with a baseline and an alert threshold.
+    - function: MANAGE
+      note: Track residual risk, rollback plans, and downtime procedures in the risk register.
+  owasp_ml:
+    - id: ML01
+      threats: [T1]
+    - id: ML02
+      threats: [T2, T12]
+    - id: ML04
+      threats: [T5]
+    - id: ML05
+      threats: [T4]
+    - id: ML06
+      threats: [T3, T7]
+    - id: ML09
+      threats: [T1, T9]
+  owasp_llm:
+    applicable: false
+    rationale: >-
+      MediScan is a vision classifier with no natural-language prompt path in this
+      release. Re-run the crosswalk if a report-generation assistant is added.

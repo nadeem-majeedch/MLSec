@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="mlsec-logo-title">
+  <title id="mlsec-logo-title">ML-Sec shield with three connected nodes</title>
+  <path d="M32 4 54 12v18c0 14-9 24-22 30C19 54 10 44 10 30V12Z" fill="none" stroke="#ffffff" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M32 19v11m0 0-8 8m8-8 8 8" fill="none" stroke="#80cbc4" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="32" cy="17" r="4.5" fill="#ffffff"/>
+  <circle cx="23" cy="39" r="4.5" fill="#ffffff"/>
+  <circle cx="41" cy="39" r="4.5" fill="#ffffff"/>
+</svg>

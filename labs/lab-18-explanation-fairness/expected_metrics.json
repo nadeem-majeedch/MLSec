@@ -1,0 +1,23 @@
+{
+  "baseline": {
+    "overall_accuracy": 0.7528,
+    "demographic_parity_gap": 0.0013,
+    "equalized_odds_gap": 0.1231,
+    "group_0": {"accuracy": 0.7383, "tpr": 0.7349, "fpr": 0.2595, "selection_rate": 0.4439},
+    "group_1": {"accuracy": 0.774, "tpr": 0.7, "fpr": 0.1364, "selection_rate": 0.4452}
+  },
+  "reweighted": {
+    "overall_accuracy": 0.7389,
+    "demographic_parity_gap": 0.0125,
+    "equalized_odds_gap": 0.093,
+    "group_0": {"accuracy": 0.729, "tpr": 0.7349, "fpr": 0.2748, "selection_rate": 0.4533},
+    "group_1": {"accuracy": 0.7534, "tpr": 0.7, "fpr": 0.1818, "selection_rate": 0.4658}
+  },
+  "explanation_stability": {
+    "baseline_gradient_x_input": {"mean_spearman": 0.8979, "mean_top2_overlap": 0.8639, "top_feature_flip_rate": 0.148},
+    "baseline_occlusion": {"mean_spearman": 0.8979, "mean_top2_overlap": 0.8653, "top_feature_flip_rate": 0.139},
+    "reweighted_gradient_x_input": {"mean_spearman": 0.901, "mean_top2_overlap": 0.8639, "top_feature_flip_rate": 0.1497},
+    "reweighted_occlusion": {"mean_spearman": 0.901, "mean_top2_overlap": 0.8653, "top_feature_flip_rate": 0.1497}
+  },
+  "note": "Seed 42, synthetic data, 360 test rows, isotropic Gaussian explanation noise sigma 0.25, 2,000 stratified bootstrap rounds. Reweighting lowers the equalized-odds gap from 0.1231 to 0.0930 but raises the demographic-parity gap from 0.0013 to 0.0125 and costs 1.39 points of accuracy. Tolerances live in check_lab18.py."
+}

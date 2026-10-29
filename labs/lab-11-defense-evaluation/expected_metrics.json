@@ -1,0 +1,33 @@
+{
+  "baseline": {
+    "clean_accuracy": 0.9667,
+    "robust_accuracy": 0.6204,
+    "asr": 0.3582,
+    "base_size": 522
+  },
+  "adversarial_training": {
+    "clean_accuracy": 0.8907,
+    "robust_accuracy": 0.7296,
+    "asr": 0.1809,
+    "base_size": 481
+  },
+  "input_squeezing": {
+    "clean_accuracy": 0.95,
+    "robust_accuracy": 0.7722,
+    "asr": 0.1871,
+    "naive_asr": 0.1871,
+    "adaptive_asr": 0.1832,
+    "base_size": 513,
+    "stress_naive_asr": 0.9571,
+    "stress_adaptive_asr": 0.9981,
+    "stress_robust_accuracy": 0.0019
+  },
+  "stress": {
+    "epsilon": 0.2,
+    "baseline_asr": 0.9579,
+    "baseline_robust_accuracy": 0.0407,
+    "adversarial_training_asr": 0.6029,
+    "adversarial_training_robust_accuracy": 0.3537
+  },
+  "note": "Seed 42, deterministic digits split, PGD at epsilon=0.10 (20 steps, 2 restarts). Adversarial training keeps most robust accuracy at a clean-accuracy cost; input squeezing looks strong at epsilon=0.10 but collapses at the stress budget epsilon=0.20. Tolerances live in check_lab11.py."
+}

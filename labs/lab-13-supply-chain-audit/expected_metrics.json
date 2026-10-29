@@ -1,0 +1,38 @@
+{
+  "findings_total": 6,
+  "severity_counts": {
+    "critical": 1,
+    "high": 3,
+    "medium": 2
+  },
+  "rules": {
+    "DEP-001": "unpinned dependencies",
+    "ART-001": "unsafe pickle-based loader",
+    "ART-002": "dangerous pickle opcodes in canary.pkl",
+    "ART-003": "manifest hash mismatch",
+    "ART-004": "unsigned manifest",
+    "ART-005": "missing SBOM"
+  },
+  "pickle_scan": {
+    "canary.pkl": ["REDUCE", "STACK_GLOBAL"],
+    "model.pkl": []
+  },
+  "verification": {
+    "vulnerable_hash_match": false,
+    "vulnerable_signature_present": false,
+    "canary_flagged": true,
+    "safe_pickle_flagged": false,
+    "hardened_hash_match": true,
+    "all_manifest_hashes_match": true,
+    "hardened_signature_valid": true,
+    "tampered_signature_valid": false,
+    "hardened_pickle_files": 0,
+    "hardened_pinned_dependencies": 5,
+    "sbom_components": 5
+  },
+  "gate": {
+    "vulnerable_exit": 1,
+    "hardened_exit": 0
+  },
+  "note": "All artifacts are benign. The canary pickle is generated locally, read with pickletools, and never unpickled. The HMAC key is a demo constant; tolerances live in check_lab13.py."
+}

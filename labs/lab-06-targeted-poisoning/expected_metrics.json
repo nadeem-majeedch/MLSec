@@ -1,0 +1,9 @@
+{
+  "clean": {"target_prediction": 1, "target_probability": 0.5903, "accuracy": 0.88},
+  "poisoned": {"target_prediction": 0, "target_probability": 0.4345, "accuracy": 0.89},
+  "defended": {"target_prediction": 1, "target_probability": 0.5465, "accuracy": 0.89},
+  "screening": {"flagged": 67, "poison_caught": 30, "clean_flagged": 37, "threshold": 0.6},
+  "poison_budget": 30,
+  "train_size": 350,
+  "note": "30 added rows, 8.57% of the 350-row clean training set; k=9 reference screening at threshold 0.6."
+}

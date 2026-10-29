@@ -1,0 +1,21 @@
+{
+  "raw_rows": 632,
+  "repaired_rows": 581,
+  "issue_counts": {
+    "missing_cells": 18,
+    "schema_violations": 10,
+    "exact_duplicate_rows": 8,
+    "label_conflict_groups": 4,
+    "implausible_labels": 6,
+    "duplicate_customer_ids": 28,
+    "leaked_customers": 12,
+    "leaky_columns": 1
+  },
+  "evaluation": {
+    "leaky_auc": 0.9584,
+    "same_rows_without_survey_auc": 0.7507,
+    "clean_auc": 0.8485,
+    "leak_gap": 0.1099
+  },
+  "note": "Deterministic synthetic data (seed 7). The label-conflict row count is 8. The implausible count includes one natural row that matches the rule plus five planted labels. Clean AUC is not directly comparable to the same-rows ablation because repair also removes contradictory labels and duplicate customers; only the same-rows ablation isolates the survey column. Tolerances live in check_lab12.py."
+}

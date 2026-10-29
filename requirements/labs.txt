@@ -1,0 +1,5 @@
+# Install the Python 3.14.7 stack used by all published labs.
+# Source of truth: labs/shared/requirements-level1.txt
+# From the repository root:
+#   python -m pip install -r requirements/labs.txt
+-r ../labs/shared/requirements-level1.txt
